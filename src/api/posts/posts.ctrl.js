@@ -1,4 +1,18 @@
 import Post from '../models/posts.js';
+import mongoose from 'mongoose';
+
+const { ObjectId } = mongoose.Types;
+
+// ObjectId 검증을 위한 미들웨어
+export const checkObjecId = (ctx, next) =>{
+    const { id } = ctx.params;
+    // id가 유효하지 않을 경우
+    if(!ObjectId.isValid(id)){
+        ctx.status = 400; // Bad Request
+        return;
+    }
+    return next();
+}
 
 // 포스트 작성
 // POST /api/posts/

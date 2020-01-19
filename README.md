@@ -206,5 +206,35 @@ dotenv.config(); // config() 함수 호출
 
 * * *
 
+### 요청 검증
+
+● ObjectId 검증
+
+서버에 잘못된 id를 전달했다면 클라이언트가 요청을 잘못 보낸 것이니 400 Bad Request 오류를
+띄워주어야 합니다. 그러기 위해서는 id 값이 올바른 ObjectId인지 확인해야 합니다.
+
+id를 검증해야 하는 API는 read, remove, update 세 가지입니다.
+
+```{.javascript}
+import mongooes from 'mongoose';
+
+const { ObjectId } = mongooes.Types;
+ObjectId.isValid(id);
+```
+
+● Request Body 검증
+
+write, update API에서 전달받은 요청 내용에 대한 검증을 해줘야 합니다.
+
+포스트를 작성할 때 title, body, tags 값을 모두 서버에 전달해줘야 합니다. 만약 클라이언트가 값을 빼먹었을 때는
+400 오류가 발생해야 합니다. 객체를 검증하는 방법은 if문으로 가능하지만 Joi 라이브러리를 사용하겠습니다.
+
+$ yarn add joi
+
+[Joi 라이브러리 사용법](https://hapi.dev/family/joi/)
+
+* * *
+
+
 
 
