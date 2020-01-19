@@ -53,12 +53,18 @@ export const write = async ctx => {
 // 포스트 목록 조회
 // GET /api/posts/
 export const list = async ctx => {
+    // query는 문자열이므로 숫자형으로 변환
+    // 기본값은 1로 설정
+    // 10진수
+    const page = parseInt(ctx.query.page || '1', 10);
+
     try{
         // 모델 인스턴스의 find() 함수롤 데이터 조회
         // exec() 를 붙여줘야 서버에 쿼리 요청
         const posts = await Post.find()
             .sort({ _id: -1 }) // 내림차순 
             .limit(10) // 한 번에 보이는 개수를 제한
+            .skip((page - 1) * 10) // 파라미터 개수 만큼 제외하고 다음 데이터부터 보여줌.
             .exec();
         ctx.body = posts;
     }catch(e) {
