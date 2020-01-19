@@ -287,5 +287,18 @@ $ yarn add bcrypt
 
 * * *
 
+### 회원 인증 API 만들기
+
+1. 회원 가입(register)
+
+> Joi 라이브러리 사용해 Request.body 검증 > username 중복 확인 > 모델 객체 생성 > 비밀번호 설정 > DB에 저장 > 응답 데이터에서 hashedPassword 필드 제거
+
+2. 로그인 구현
+
+> username, password 입력 되었는지 확인 > username 존재 여부 확인 > password 확인 > 응답 데이터에서 hashedPassword 필드 제거
+
+* * *
+
+
 
 
