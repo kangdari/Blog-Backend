@@ -1,9 +1,9 @@
 const Router = require("koa-router");
+const posts = require('./posts/index.js');
 
 const api = new Router();
 
-api.get('/test', ctx =>{
-    ctx.body = 'test';
-})
+// posts 라우트 적용
+api.use('/posts', posts.routes());
 
 module.exports = api;
