@@ -66,6 +66,9 @@ export const list = async ctx => {
             .limit(10) // 한 번에 보이는 개수를 제한
             .skip((page - 1) * 10) // 파라미터 개수 만큼 제외하고 다음 데이터부터 보여줌.
             .exec();
+        // 커스텀 헤더 작성, HTTP 헤더 작성
+        const postCount = await Post.countDocuments().exec();
+        ctx.set('Last-Page', Math.ceil(postCount / 10));
         ctx.body = posts;
     }catch(e) {
         ctx.throw(500, e);
