@@ -59,6 +59,18 @@ $ yarn add -dev nodemon // nodemon 설치 이후 package.json에 scripts 작성
 ```
 
 * * *
+### koa-router 사용
+
+$ yarn add koa-router // koa-router 설치
+
+라우트 파라미터를 설정 할 때는 /about/:name 형식으로 콜론(:)을 사용하여 라우터 경로 설정 
+
+ctx.parmas 객체에서 조회 가능 
+
+URL 쿼리의 경우, /posts/?id=3 같은 형식으로 요청했다면 ctx.query에서 조회 가능
+
+* * *
+
 
 
 
