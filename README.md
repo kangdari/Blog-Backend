@@ -190,5 +190,21 @@ dotenv.config(); // config() 함수 호출
 
 >특정 포스트 조회 시 findById() 함수 사용
 
+### 데이터 삭제 및 수정
+
+● mongooes 데이터 삭제 함수 
+
+>remove(): 특정 조건을 만족하는 데이터를 모두 삭제
+
+>findByIdAndRemove(): id를 찾아서 삭제
+
+>findOneAndRemove(): 특정 조건을 만족하는 데이터를 하나를 찾아서 삭제
+
+● mongooes 데이터 업데이트 함수
+
+>findByIdAndUpdate(id, update 내용, 업데이트 옵션): id를 찾아 업데이트
+
+* * *
+
 
 
