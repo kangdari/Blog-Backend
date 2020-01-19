@@ -56,7 +56,10 @@ export const list = async ctx => {
     try{
         // 모델 인스턴스의 find() 함수롤 데이터 조회
         // exec() 를 붙여줘야 서버에 쿼리 요청
-        const posts = await Post.find().exec();
+        const posts = await Post.find()
+            .sort({ _id: -1 }) // 내림차순 
+            .limit(10) // 한 번에 보이는 개수를 제한
+            .exec();
         ctx.body = posts;
     }catch(e) {
         ctx.throw(500, e);
