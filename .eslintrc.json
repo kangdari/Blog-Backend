@@ -13,5 +13,11 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "no-unused-vars": "warn",
+        // console.log 사용을 위해 off 설정
+        "no-console": "off"
+    },
+    "parserOptions": {
+        "sourceType": "module",
     }
 }

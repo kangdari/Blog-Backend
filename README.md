@@ -130,4 +130,40 @@ $ yarn add mongoose dotenv
 
 * * *
 
+### Node.js에서 ES 모듈 import / export 문법 사용
+
+기존에 리액트 프로젝트에서 사용해 오던 ES 모듈 import/export 문법이 Node.js v12부터 정식으로 지원됩니다.
+
+1. package.json에서 "type": "module" 추가해줍니다. ( 저는 v13.6.0 사용했습니다. )
+
+2. require/module.exports 구문들을 import/export 구문으로 모두 변경해줍니다.
+
+3. module을 import 하는 과정에서 .js 확장자까지 포함해주어야 오류가 발생하지 않습니다.
+
+4. src/index.js 파일 맨 위에 require('dotenv').config(); 문구를 작성했었습니다. config() 함수를 호출해야
+process.env 값을 조회할 수 있습니다. 하지만 ReferenceError: require is not defined 오류가 발생하여 수정했습니다.
+
+```{.javascript}
+import dotenv from 'dotenv';
+(...)
+dotenv.config(); // config() 함수 호출
+(...)
+```
+
+5. yarn start / yarn start:dev 서버 실행
+
+6. 자동 완성을 통해 모듈 불러오기, 루트 디렉토리에 jsconfig.json 작성
+
+```{.javascript}
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "es2015"
+    },
+    "include": ["src/**/*"]
+}
+```
+
+* * *
+
 

@@ -1,16 +1,21 @@
-require('dotenv').config();
-const Koa = require('koa');
-const Router = require('koa-Router');
-const bodyParser = require('koa-bodyparser');
-const mongooes = require('mongoose');
+import dotenv from 'dotenv';
+import Koa from 'koa';
+import Router from 'koa-Router';
+import bodyParser from 'koa-bodyparser';
+import mongoose from 'mongoose';
 // api 모듈 불러옴
-const api = require('./api/index.js');
+import api from './api/index.js';
 
+dotenv.config();
 // 비구조화 할당을 통해 process.env 내부 값에 대한 레퍼런스 생성
 const { PORT, MONGO_URL } = process.env;
 
-mongooes
-    .connect(MONGO_URL, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true})
+mongoose
+    .connect(MONGO_URL, {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true,
+    })
     .then(() => {
         console.log('Connected to MongoDB');
     })
