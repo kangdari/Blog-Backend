@@ -5,15 +5,15 @@ import Joi from 'joi';
 const { ObjectId } = mongoose.Types;
 
 // ObjectId 검증을 위한 미들웨어
-export const checkObjecId = (ctx, next) =>{
+export const checkObjecId = (ctx, next) => {
     const { id } = ctx.params;
     // id가 유효하지 않을 경우
-    if(!ObjectId.isValid(id)){
+    if (!ObjectId.isValid(id)) {
         ctx.status = 400; // Bad Request
         return;
     }
     return next();
-}
+};
 
 // 포스트 작성
 // POST /api/posts/
@@ -23,13 +23,15 @@ export const write = async ctx => {
         // 객체는 다음 필드를 가져야 함.
         title: Joi.string().required(), // required() 필수 요소
         body: Joi.string().required(),
-        tags: Joi.array().items(Joi.string()).required() // 문자열 배열
-    })
+        tags: Joi.array()
+            .items(Joi.string())
+            .required(), // 문자열 배열
+    });
 
     // 검증 후 검증 실패인 경우 에러 처리
     // 입력한 값과 schema의 필드 형식이 같은지 검증
     const result = Joi.validate(ctx.request.body, schema);
-    if(result.error){
+    if (result.error) {
         ctx.status = 400; // Bad Request
         ctx.body = result.error;
         return;
@@ -39,13 +41,13 @@ export const write = async ctx => {
     const post = new Post({
         title,
         body,
-        tags
-    })
-    try{
+        tags,
+    });
+    try {
         // DB에 저장
         await post.save();
-        ctx.body = post;    
-    }catch(e) {
+        ctx.body = post;
+    } catch (e) {
         ctx.throw(500, e); // 서버 에러
     }
 };
@@ -58,19 +60,29 @@ export const list = async ctx => {
     // 10진수
     const page = parseInt(ctx.query.page || '1', 10);
 
-    try{
+    try {
         // 모델 인스턴스의 find() 함수롤 데이터 조회
         // exec() 를 붙여줘야 서버에 쿼리 요청
         const posts = await Post.find()
-            .sort({ _id: -1 }) // 내림차순 
+            .sort({ _id: -1 }) // 내림차순
             .limit(10) // 한 번에 보이는 개수를 제한
             .skip((page - 1) * 10) // 파라미터 개수 만큼 제외하고 다음 데이터부터 보여줌.
             .exec();
         // 커스텀 헤더 작성, HTTP 헤더 작성
         const postCount = await Post.countDocuments().exec();
         ctx.set('Last-Page', Math.ceil(postCount / 10));
-        ctx.body = posts;
-    }catch(e) {
+        // ctx.body = posts;
+        // 내용 길이 제한
+        ctx.body = posts
+            .map(post => (post = post.toJSON()))
+            .map(post => ({
+                ...post,
+                body:
+                    post.body.length < 200
+                        ? post.body
+                        : `${post.body.slice(0, 200)}...`,
+            }));
+    } catch (e) {
         ctx.throw(500, e);
     }
 };
@@ -79,15 +91,15 @@ export const list = async ctx => {
 // GET /api/posts/:id
 export const read = async ctx => {
     const { id } = ctx.params;
-    try{
+    try {
         // id 값을 가진 데이터를 조회 시 findById() 함수 사용
         const post = await Post.findById(id).exec();
-        if(!post){
+        if (!post) {
             ctx.status = 404; // Not Found
             return;
         }
         ctx.body = post;
-    }catch(e) {
+    } catch (e) {
         ctx.throw(500, e);
     }
 };
@@ -96,10 +108,10 @@ export const read = async ctx => {
 // DELETE /api/posts/:id
 export const remove = async ctx => {
     const { id } = ctx.params;
-    try{
+    try {
         await Post.findByIdAndRemove(id).exec();
         ctx.status = 204; // No Connect 성공했지만 응답할 데이터 없음.
-    }catch(e) {
+    } catch (e) {
         ctx.throw(500, e);
     }
 };
@@ -110,28 +122,28 @@ export const update = async ctx => {
     const schema = Joi.object().keys({
         title: Joi.string(),
         body: Joi.string(),
-        tages: Joi.array().items(Joi.string())
-    })
+        tages: Joi.array().items(Joi.string()),
+    });
 
     const result = Joi.validate(ctx.request.body, schema);
-    if(result.error){
+    if (result.error) {
         ctx.status = 400; // Bad Request;
         ctx.body = result.error;
-        return ;
+        return;
     }
 
     const { id } = ctx.params;
-    try{
-        const post = await Post.findByIdAndUpdate(id, ctx.request.body,{
-            new: true  // 이 값을 설정하면 업데이트된 데이터를 반환
+    try {
+        const post = await Post.findByIdAndUpdate(id, ctx.request.body, {
+            new: true, // 이 값을 설정하면 업데이트된 데이터를 반환
             // false일 때는 업데이트되기 전의 데이터를 반환
         }).exec();
-        if(!post){
+        if (!post) {
             ctx.status = 404; // Not Found
             return;
         }
         ctx.body = post;
-    }catch(e) {
+    } catch (e) {
         ctx.throw(500, e);
     }
 };
