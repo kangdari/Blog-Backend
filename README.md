@@ -45,3 +45,20 @@ koa는 async/await를 정식으로 지원함.
 
 * * *
 
+### nodemon 사용
+
+nodemon을 사용하여 코드를 변경할 때마다 서버를 자동으로 재시작
+
+$ yarn add -dev nodemon // nodemon 설치 이후 package.json에 scripts 작성
+
+```{.javascript}
+  "scripts":{
+    "start": "node src",
+    "start:dev": "nodemon --watch src/ src/index.js"
+  }
+```
+
+* * *
+
+
+
