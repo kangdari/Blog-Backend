@@ -3,6 +3,8 @@ import Koa from 'koa';
 import Router from 'koa-Router';
 import bodyParser from 'koa-bodyparser';
 import mongoose from 'mongoose';
+import createFakeData from './createFakeData.js'
+
 // api 모듈 불러옴
 import api from './api/index.js';
 
@@ -18,6 +20,7 @@ mongoose
     })
     .then(() => {
         console.log('Connected to MongoDB');
+        createFakeData();
     })
     .catch(e => {
         console.log(e);
