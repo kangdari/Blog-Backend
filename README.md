@@ -289,6 +289,12 @@ $ yarn add bcrypt
 
 ### 회원 인증 API 만들기
 
+● 인스턴스 함수
+> 모델을 통해 만든 문서 인스턴스에서 사용할 수 있는 함수
+
+● 스태틱 함수 
+> 모델에서 바로 사용할 수 있는 함수
+
 1. 회원 가입(register)
 
 > Joi 라이브러리 사용해 Request.body 검증 > username 중복 확인 > 모델 객체 생성 > 비밀번호 설정 > DB에 저장 > 응답 데이터에서 hashedPassword 필드 제거
