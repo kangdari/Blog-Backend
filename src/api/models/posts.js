@@ -10,6 +10,10 @@ const postSchema = new Schema({
         type: Date,
         default: Date.now(),
     },
+    user: {
+        _id: mongoose.Types.ObjectId,
+        username: String
+    }
 });
 
 // 모델 생성
