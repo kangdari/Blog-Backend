@@ -31,21 +31,49 @@ export const register = async ctx => {
         }
         // user 모델 인스턴스 생성
         const user = new User({
-            username
-        })
+            username,
+        });
         // hash 값으로 변경된 password를 user 인스턴스에 적용
-        user.setPassword(password);
-        user.save(); // DB 저장
+        await user.setPassword(password);
+        await user.save(); // DB 저장
 
         // 응답할 데이터에서 hashedPassword 필드 제거
         ctx.body = user.serialize();
-    }catch(e) {
+    } catch (e) {
         ctx.throw(500, e);
     }
 };
 
 // 로그인
-export const login = ctx => {};
+// POST /api/auth/login
+export const login = async ctx => {
+    const { username, password } = ctx.request.body;
+
+    // 입력한 useranme, password가 없을 경우
+    if (!username || !password) {
+        ctx.status = 401; // Unauthorized
+        return;
+    }
+
+    try {
+        // user가 존재하는지 체크
+        const user = await User.findByUsername(username); // true or false
+        if (!user) {
+            ctx.status = 401; // Unauthorized
+            return;
+        }
+        // 입력한 password와 user 모델 인스턴스의 hashedPassword 비교
+        const valid = await user.checkPassword(password); // ture or false
+        if (!valid) {
+            ctx.status = 401;
+            return;
+        }
+        // 응답할 데이터에서 hashedPassword 필드 제거
+        ctx.body = user.serialize();
+    } catch (e) {
+        ctx.throw(500, e);
+    }
+};
 
 // 로그인 상태 확인
 export const checkLogin = ctx => {};
