@@ -94,7 +94,7 @@ export const login = async ctx => {
 // 로그인 상태 확인
 export const checkLogin = async ctx => {
     const { user } = ctx.state;
-    if(!user){
+    if (!user) {
         // 로그인 중 아님
         ctx.status = 401; // Unauthorized
         return;
@@ -103,4 +103,8 @@ export const checkLogin = async ctx => {
 };
 
 // 로그아웃
-export const logout = ctx => {};
+// POST /api/auth/logout
+export const logout = ctx => {
+    ctx.cookies.set('access_token'); // 기존 쿠키를 지움
+    ctx.status = 204; // No Connect
+};
