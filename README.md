@@ -376,3 +376,11 @@ const token = jwt.sign(
 3. 로그인했을 때만 API 사용할 수 있게 하기
 
 >checkLoggedIn 미들웨어를 만들어 로그인을 했을 때만 CRUD 기능을 사용할 수 있도록 합니다. posts 라우터에 이 미들웨어 적용
+
+4. 포스트 작성 시 사용자 정보 넣기
+
+5. 포스트 수정 및 삭제 시 권한 확인하기
+
+> 기존에 만들었던 posts.ctrl.js의 checkObjectId를 getPostById 미들웨어로 변경, id로 찾은 포스트를 ctx.state에 담아 줌.
+
+> checkOwnPost 미들웨어 작성, id로 찾은 포스트가 로그인 중인 사용자가 작성한 포스트인지 확인. 사용자의 포스트가 아니라면 403 에러

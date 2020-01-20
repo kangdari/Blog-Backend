@@ -5,15 +5,37 @@ import Joi from 'joi';
 const { ObjectId } = mongoose.Types;
 
 // ObjectId 검증을 위한 미들웨어
-export const checkObjecId = (ctx, next) => {
+export const getPostById = async (ctx, next) => {
     const { id } = ctx.params;
     // id가 유효하지 않을 경우
     if (!ObjectId.isValid(id)) {
         ctx.status = 400; // Bad Request
         return;
     }
+    try{
+        const post = await Post.findById(id);
+        // 포스트가 존재 하지 않을 떄
+        if(!post){
+            ctx.status = 404; // Not Found
+            return;
+        }
+        ctx.state.post = post;
+        return next();
+    }catch(e) {
+        ctx.throw(500, e);
+    }
     return next();
 };
+
+// id로 찾은 포스트가 로그인 중인 사용자가 작성한 포스트인지 확인 하는 미들웨어
+export const checkOwnPost = (ctx, next) =>{
+    const { user, post } = ctx.state;
+    if(post.user._id.toString() !== user._id){
+        ctx.status = 403; // Forbidden
+        return
+    }
+    return next();
+}
 
 // 포스트 작성
 // POST /api/posts/
@@ -91,18 +113,7 @@ export const list = async ctx => {
 // 특정 포스트 조회
 // GET /api/posts/:id
 export const read = async ctx => {
-    const { id } = ctx.params;
-    try {
-        // id 값을 가진 데이터를 조회 시 findById() 함수 사용
-        const post = await Post.findById(id).exec();
-        if (!post) {
-            ctx.status = 404; // Not Found
-            return;
-        }
-        ctx.body = post;
-    } catch (e) {
-        ctx.throw(500, e);
-    }
+    ctx.body = ctx.state.post;
 };
 
 // 특정 포스트 제거
