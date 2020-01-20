@@ -12,30 +12,30 @@ export const getPostById = async (ctx, next) => {
         ctx.status = 400; // Bad Request
         return;
     }
-    try{
+    try {
         const post = await Post.findById(id);
         // 포스트가 존재 하지 않을 떄
-        if(!post){
+        if (!post) {
             ctx.status = 404; // Not Found
             return;
         }
         ctx.state.post = post;
         return next();
-    }catch(e) {
+    } catch (e) {
         ctx.throw(500, e);
     }
     return next();
 };
 
 // id로 찾은 포스트가 로그인 중인 사용자가 작성한 포스트인지 확인 하는 미들웨어
-export const checkOwnPost = (ctx, next) =>{
+export const checkOwnPost = (ctx, next) => {
     const { user, post } = ctx.state;
-    if(post.user._id.toString() !== user._id){
+    if (post.user._id.toString() !== user._id) {
         ctx.status = 403; // Forbidden
-        return
+        return;
     }
     return next();
-}
+};
 
 // 포스트 작성
 // POST /api/posts/
@@ -83,16 +83,28 @@ export const list = async ctx => {
     // 10진수
     const page = parseInt(ctx.query.page || '1', 10);
 
+    if (page < 1) {
+        ctx.status = 400;
+        return;
+    }
+
+    const { tag, usernmae } = ctx.query;
+    // tag, username 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음.
+    const query = {
+        ...(usernmae ? { username: usernmae } : {}),
+        ...(tag ? { tags: tag } : {}),
+    };
+
     try {
         // 모델 인스턴스의 find() 함수롤 데이터 조회
         // exec() 를 붙여줘야 서버에 쿼리 요청
-        const posts = await Post.find()
+        const posts = await Post.find(query)
             .sort({ _id: -1 }) // 내림차순
             .limit(10) // 한 번에 보이는 개수를 제한
             .skip((page - 1) * 10) // 파라미터 개수 만큼 제외하고 다음 데이터부터 보여줌.
             .exec();
         // 커스텀 헤더 작성, HTTP 헤더 작성
-        const postCount = await Post.countDocuments().exec();
+        const postCount = await Post.countDocuments(query).exec();
         ctx.set('Last-Page', Math.ceil(postCount / 10));
         // ctx.body = posts;
         // 내용 길이 제한

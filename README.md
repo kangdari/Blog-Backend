@@ -384,3 +384,9 @@ const token = jwt.sign(
 > 기존에 만들었던 posts.ctrl.js의 checkObjectId를 getPostById 미들웨어로 변경, id로 찾은 포스트를 ctx.state에 담아 줌.
 
 > checkOwnPost 미들웨어 작성, id로 찾은 포스트가 로그인 중인 사용자가 작성한 포스트인지 확인. 사용자의 포스트가 아니라면 403 에러
+
+* * *
+
+### username/tags로 포스트 필터링
+
+특정 사용자가 작성한 포스트만 조회하거나 특정 태그가 있는 포스트만 조회하는 기능
