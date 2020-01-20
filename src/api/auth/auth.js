@@ -92,7 +92,15 @@ export const login = async ctx => {
 };
 
 // 로그인 상태 확인
-export const checkLogin = ctx => {};
+export const checkLogin = async ctx => {
+    const { user } = ctx.state;
+    if(!user){
+        // 로그인 중 아님
+        ctx.status = 401; // Unauthorized
+        return;
+    }
+    ctx.body = user;
+};
 
 // 로그아웃
 export const logout = ctx => {};

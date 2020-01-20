@@ -346,6 +346,10 @@ const token = jwt.sign(
 쿠키에 담아도 같은 문제가 발생할 수 있지만 httpOnly라는 속성을 활성화하면 자바스크립트를 통해 쿠키를 조회할 수 없으므로 악성 스크립트로부터
 안전합니다. 대신 CSRF(Cross Site Request Forgery)라는 공격에 취약할 수 있지만 CSRF 토큰 및 Referer 검증 등의 방식으로 방어할 수 있음.
 
+3. 토큰 검증하기
+
+>src/llb/jwtMiddleware.js 작성
+
 
 
 
