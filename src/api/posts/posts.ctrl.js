@@ -116,10 +116,10 @@ export const list = async ctx => {
         return;
     }
 
-    const { tag, usernmae } = ctx.query;
+    const { tag, username } = ctx.query;
     // tag, username 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음.
     const query = {
-        ...(usernmae ? { username: usernmae } : {}),
+        ...(username ? { 'user.username': username } : {}),
         ...(tag ? { tags: tag } : {}),
     };
 
@@ -128,12 +128,12 @@ export const list = async ctx => {
         // exec() 를 붙여줘야 서버에 쿼리 요청
         const posts = await Post.find(query)
             .sort({ _id: -1 }) // 내림차순
-            .limit(10) // 한 번에 보이는 개수를 제한
-            .skip((page - 1) * 10) // 파라미터 개수 만큼 제외하고 다음 데이터부터 보여줌.
+            .limit(5) // 한 번에 보이는 개수를 제한
+            .skip((page - 1) * 5) // 파라미터 개수 만큼 제외하고 다음 데이터부터 보여줌.
             .exec();
         // 커스텀 헤더 작성, HTTP 헤더 작성
         const postCount = await Post.countDocuments(query).exec();
-        ctx.set('Last-Page', Math.ceil(postCount / 10));
+        ctx.set('Last-Page', Math.ceil(postCount / 5));
 
         // 기존의 문자열의 길이만 제한하던 방식에서 HTML을 제거하고 문자열의 길이를
         // 200 글자로 제한하도록 함수 추가
