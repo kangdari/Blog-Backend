@@ -8,7 +8,7 @@ const postSchema = new Schema({
     tags: [String], // 문자열 배열
     publishDate: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
     },
     user: {
         _id: mongoose.Types.ObjectId,

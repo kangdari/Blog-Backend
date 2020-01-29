@@ -390,3 +390,26 @@ const token = jwt.sign(
 ### username/tags로 포스트 필터링
 
 특정 사용자가 작성한 포스트만 조회하거나 특정 태그가 있는 포스트만 조회하는 기능
+
+
+## blog-frontend
+
+  ## HTML 필터링하기
+
+  현재 posts 목록 출력 시 HTML 태그가 그대로 보임. 이 태그를 없애기 위해서 서버 쪽에서 태그를 없애는 작업 추가
+
+  HTML을 제거하는 기능뿐만 아니라 특정 HTML만을 허용하는 기능이 있어 악성 스크립트 삽입을 막을 수 있다.
+
+  백엔드 프로젝트에서 sanitize-html 라이브러리 설치
+
+  $ yarn add sanitize-html // sanitize-html 라이브러리를 사용하여 HTML 필터링
+
+  백엔드 프로젝트 posts.ctrl.js 수정
+
+  list, write, update 3개의 함수 수정
+
+  list 함수에서는 sanitizeHtml 함수를 사용하여 HTML을 제거하고 문자열의 길이를 제한하는 함수를 작성하고 적용
+
+  write 함수에서는 HTML의 특정 태그와 특정 속성만을 허용하는 객체를 적용하여 HTML 필터링
+
+  update 함수에서는 수정된 내용의 객체를 복사하여 sanitizeHtml 함수를 사용해 HTML 제거
