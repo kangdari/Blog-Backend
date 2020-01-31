@@ -413,3 +413,52 @@ const token = jwt.sign(
   write 함수에서는 HTML의 특정 태그와 특정 속성만을 허용하는 객체를 적용하여 HTML 필터링
 
   update 함수에서는 수정된 내용의 객체를 복사하여 sanitizeHtml 함수를 사용해 HTML 제거
+
+
+## 프로젝트 마무리
+
+  ● 클라이언트에서 프로젝트 빌드 후
+
+  ● koa-static으로 정적 파일 제공
+
+  서버를 통해 blog-fronted/build 디렉터리 안의 파일을 사용할 수 있도록 koa-static을 사용하여 정적 파일 
+
+  제공 기능 구현. 서버 프로적트(blog-backend)에서 koa-static 설치
+
+  $ yarn add koa-static
+
+  src/index.js 수정 > 오류 해결 > 서버 실행 후 http://localhost:4000/ 로 접속
+
+
+## 오류 해결
+
+  The ESM module loader is experimental
+
+  ...
+
+  ReferenceError: __dirname is not defined
+
+  No require, exports, module.exports, __filename, __dirname 과 같은 Command Js는 ES 모듈에서 사용이 불가능하여 
+
+  위와 같은 오류가 발생합니다.
+
+  이를 해결하기 위해 아래와 같은 방법을 이용하여 __filename, __dirname와 같은 변수를 동일하게 만들어 사용하여 
+  
+  오류를 해결했습니다.
+
+  ```{.javascript}
+    import { fileURLToPath } from 'url';
+    import { dirname } from 'path';
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+  ```
+
+  [ECMAScript Modules](https://nodejs.org/api/esm.html#esm_no_require_exports_module_exports_filename_dirname)
+
+
+  __dirname : 현재 실행되고 있는 모듈의 디렉토리 이름
+
+  __filename : 현재 실행되고 있는 파일의 이름
+
+  [Node Modules](https://nodejs.org/docs/latest/api/modules.html#modules_dirname)
